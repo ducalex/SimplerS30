@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# This is our entry point, the PocketGo S30 executes this file on load
+
+export XDG_CONFIG_HOME=/mnt/extsd
+
+
+# Remount the SD card with the sync flag added
+mount -o remount,sync /mnt/extsd/
+
+# Start our user interface
+/mnt/extsd/bin/gmenu2x-bin

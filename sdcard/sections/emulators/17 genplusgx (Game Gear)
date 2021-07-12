@@ -1,0 +1,10 @@
+title=Game Gear
+#description=GG Emulator
+icon=skin:icons/gg.png
+backdrop=skin:wallpapers/gg.png
+exec=/mnt/extsd/retroarch/retroarch
+params=--appendconfig base_s30.cfg -L cores/genesis_plus_gx_libretro.so
+wrapper=true
+selectorbrowser=false
+selectordir=/mnt/extsd/roms/gg
+selectorfilter=gg,zip

@@ -1,0 +1,9 @@
+title=Sega 32x
+#description=SMS/SMD Emulator
+icon=skin:icons/md.png
+backdrop=skin:wallpapers/32x.png
+exec=/mnt/extsd/retroarch/retroarch
+params=--appendconfig base_s30.cfg -L cores/picodrive_libretro.so
+wrapper=true
+selectorbrowser=false
+selectordir=/mnt/extsd/roms/32x
