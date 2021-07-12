@@ -7,3 +7,4 @@ params=--appendconfig base_s30.cfg -L cores/fceumm_libretro.so
 wrapper=true
 selectorbrowser=false
 selectordir=/mnt/extsd/roms/nes
+selectorfilter=nes,fc,fds,zip

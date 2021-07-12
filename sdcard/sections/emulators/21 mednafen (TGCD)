@@ -7,4 +7,4 @@ params=--appendconfig base_s30.cfg -L cores/mednafen_pce_fast_libretro.so
 wrapper=true
 selectordir=/mnt/extsd/roms/tgcd
 selectorbrowser=false
-selectorfilter=cue,zip
+selectorfilter=cue,zip,iso,chd

@@ -1,0 +1,10 @@
+title=Wonderswan Color
+#description=Wonderswan Color Emulator
+icon=skin:icons/wsc.png
+backdrop=skin:wallpapers/wsc.png
+exec=/mnt/extsd/retroarch/retroarch
+params=--appendconfig base_s30.cfg -L cores/mednafen_wswan_libretro.so
+wrapper=true
+selectordir=/mnt/extsd/roms/wsc
+selectorbrowser=false
+selectorfilter=ws,wsc,zip

@@ -7,4 +7,4 @@ params=--appendconfig base_s30.cfg -L cores/mednafen_pce_fast_libretro.so
 wrapper=true
 selectorbrowser=false
 selectordir=/mnt/extsd/roms/tg16
-selectorfilter=
+selectorfilter=pce,zip

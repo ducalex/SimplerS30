@@ -2,7 +2,14 @@
 
 # This is our entry point, the PocketGo S30 executes this file on load
 
+# Setup environment
 export XDG_CONFIG_HOME=/mnt/extsd
+export PATH=/bin:/mnt/extsd/bin
+export LD_LIBRARY_PATH=/lib:/mnt/extsd/lib
+
+
+# Make sure essential directories exist
+mkdir -p /mnt/extsd/saves/{savefiles,savestates,ppsspp}
 
 
 # Remount the SD card with the sync flag added

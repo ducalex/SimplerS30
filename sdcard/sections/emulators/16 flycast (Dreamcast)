@@ -7,4 +7,4 @@ params=--appendconfig base_s30.cfg -L cores/flycast_libretro.so
 wrapper=true
 selectorbrowser=false
 selectordir=/mnt/extsd/roms/dc
-selectorfilter=gdi,cdi,zip,chd
+selectorfilter=gdi,cdi,zip,chd,iso

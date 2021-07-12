@@ -7,3 +7,4 @@ params=--appendconfig base_s30.cfg -L cores/gambatte_libretro.so
 wrapper=true
 selectorbrowser=false
 selectordir=/mnt/extsd/roms/gb
+selectorfilter=gb,gbc,zip

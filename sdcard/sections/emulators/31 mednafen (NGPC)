@@ -1,0 +1,10 @@
+title=Neogeo Pocket Color
+#description=Neogeo Pocket Color Emulator
+icon=skin:icons/ngpc.png
+backdrop=skin:wallpapers/ngpc.png
+exec=/mnt/extsd/retroarch/retroarch
+params=--appendconfig base_s30.cfg -L cores/mednafen_ngp_libretro.so
+wrapper=true
+selectordir=/mnt/extsd/roms/ngpc
+selectorbrowser=false
+selectorfilter=ngp,ngpc,zip

@@ -7,3 +7,4 @@ params=
 wrapper=true
 selectorbrowser=false
 selectordir=/mnt/extsd/roms/psp
+selectorfilter=iso,cso,bin,pbp,zip
