@@ -1,21 +1,20 @@
 # SimplerS30
 
-This is a firmware for the PocketGo S30 based on [SimpleS30](https://retrogamecorps.com/2021/02/13/introducing-simple30-an-optimized-pocketgo-s30-firmware/) by [retrogamecorps](https://retrogamecorps.com).
+This is a RetroArch firmware for the PocketGo S30 aiming to provide a pick-up-and-play experience.
 
-It addresses the following issues so far:
+Simpler30 respects RetroArch's default settings, `base_s30.cfg` contains only what is required to run correctly on the S30. 
+Playlists are generated automatically at boot for a true pick-up-and-play experience!
 
-- Confusing file structure and random files all over
-- The menu/power button didn't open the menu
-- The on-screen notifications were unreadable
-- 
 
-The project also has additional goals:
+# Installation
+Copy the content of the sdcard folder to the root of your FAT32 SD Card.
+
+
+# Future Plans
 
 - Periodically keep up with new emulator versions
-- Switch to a more flexible launcher or perhaps a stock gmenu2x
-- Port some non-libretro games
+- Port some non-libretro games (add a way to start PPSSPP for example)
 - Dump the internal flash and find out if modifications are possible
-
 
 
 # Technical information
@@ -46,9 +45,8 @@ The buttons on the S30 map to keyboard keys as follows:
 
 
 
-
-
 # Acknowledgements
 
-- SimpleS30 by [retrogamecorps](https://retrogamecorps.com).
+- While this project is no longer based on [SimpleS30 by retrogamecorps](https://retrogamecorps.com), it was an invaluable resource!
+- bkacjios's [RetroArch](https://github.com/bkacjios/RetroArch), which I believe is the one I use (I took it from Simple30).
 - The toolchain was shared by [slaminger](https://github.com/slaminger).

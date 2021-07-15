@@ -1,6 +1,0 @@
-title=RetroArch
-#description=RetroArch
-#icon=skin:icons/retroarch.png
-backdrop=skin:wallpapers/retroarch.png
-exec=/mnt/extsd/retroarch/retroarch
-params=--appendconfig base_s30.cfg --menu

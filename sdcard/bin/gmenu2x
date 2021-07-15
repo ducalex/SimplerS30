@@ -7,13 +7,40 @@ export XDG_CONFIG_HOME=/mnt/extsd
 export PATH=/bin:/mnt/extsd/bin
 export LD_LIBRARY_PATH=/lib:/mnt/extsd/lib
 
+mkdir -p /mnt/extsd/retroarch/{saves,states,playlists}
+cd /mnt/extsd/retroarch
 
-# Make sure essential directories exist
-mkdir -p /mnt/extsd/saves/{savefiles,savestates,ppsspp}
-
+# Scan for roms and generate dynamic playlists for better pick up and play experience
+# Ideally we should store this on the SD Card on regenerate if the filesystem changes
+# But I haven't found a reliable way to QUICKLY detect changes...
+if [ -x "$(command -v playgen)" ]
+then
+    #mount -o nonempty -t tmpfs tmpfs ./playlists
+    ROMS=/mnt/extsd/roms
+    CDROM="cue|mdf|chd|pbp|ccd|gdi|cdi|img|iso"
+    playgen "playlists/Nintendo - Nintendo Entertainment System.lpl"        "cores/fceumm_libretro.so"            "nes|fc|zip"          $ROMS/{nes,fc,"Nintendo"}
+    playgen "playlists/Nintendo - Super Nintendo Entertainment System.lpl"  "cores/snes9x2010_libretro.so"        "smc|sfc|zip"         $ROMS/{snes,sfc,"Super Nintendo"}
+    playgen "playlists/Nintendo - Nintendo 64.lpl"                          "cores/mupen64plus_libretro.so"       "n64|z64|zip"         $ROMS/{n64,"Nintendo 64"}
+    playgen "playlists/Nintendo - Game Boy.lpl"                             "cores/gambatte_libretro.so"          "gb|gbc|zip"          $ROMS/{gb,"Game Boy"}
+    playgen "playlists/Nintendo - Game Boy Color.lpl"                       "cores/gambatte_libretro.so"          "gb|gbc|zip"          $ROMS/{gbc,"Game Boy Color"}
+    playgen "playlists/Nintendo - Game Boy Advance.lpl"                     "cores/mgba_libretro.so"              "gba|gbc|gb|zip"      $ROMS/{gba,"Game Boy Advance"}
+    playgen "playlists/Sega - Master System - Mark III.lpl"                 "cores/genesis_plus_gx_libretro.so"   "sms|bin|zip"         $ROMS/{sms,"Master System"}
+    playgen "playlists/Sega - Mega Drive - Genesis.lpl"                     "cores/genesis_plus_gx_libretro.so"   "md|gen|zip"          $ROMS/{md,gen,"Genesis"}
+    playgen "playlists/Sega - Dreamcast.lpl"                                "cores/flycast_libretro.so"           "$CDROM"              $ROMS/{dc,"Dreamcast"}
+    playgen "playlists/Sega - Game Gear.lpl"                                "cores/genesis_plus_gx_libretro.so"   "gg|bin|zip"          $ROMS/{gg,"Game Gear"}
+    playgen "playlists/Sony - PlayStation.lpl"                              "cores/pcsx_rearmed_libretro.so"      "$CDROM"              $ROMS/{psx,ps1}
+    playgen "playlists/Atari - Lynx.lpl"                                    "cores/handy_libretro.so"             "lnx|bin|zip"         $ROMS/{lnx,lynx}
+    playgen "playlists/NEC - PC Engine - TurboGrafx 16.lpl"                 "cores/mednafen_pce_fast_libretro.so" "pce|bin|zip"         $ROMS/{pce,tg16}
+    playgen "playlists/NEC - PC Engine CD - TurboGrafx-CD.lpl"              "cores/mednafen_pce_fast_libretro.so" "$CDROM"              $ROMS/{pcecd,tgcd}
+    playgen "playlists/DOOM.lpl"                                            "cores/prboom_libretro.so"            "wad|iwad|pwad"       $ROMS/{doom,prboom}
+fi
 
 # Remount the SD card with the sync flag added
 mount -o remount,sync /mnt/extsd/
 
-# Start our user interface
-/mnt/extsd/bin/gmenu2x-bin
+# Start retroarch
+retroarch --appendconfig base_s30.cfg --menu
+
+# Shutdown when retroarch exits
+sync
+reboot -p

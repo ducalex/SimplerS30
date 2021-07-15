@@ -1,0 +1,3 @@
+tools/playgen/playgen
+tools/playgen/*.out
+tools/playgen/*.exe
