@@ -12,7 +12,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/stat.h>
 
 // Should be .h but this saves a makefile...
 #include "cJSON.c"
@@ -23,58 +22,51 @@ static const char *basename(const char *path)
     return name ? name + 1 : path;
 }
 
-static int scan_folder(const char *folder, const char *extensions, cJSON *tree)
+static void scan_folder(const char *folder, const char *extensions, cJSON *tree)
 {
-    char buffer1[1024];
-    char buffer2[1024];
-    int count = 0;
+    char path[PATH_MAX];
+     
+    if (!realpath(folder, path))
+        strcpy(path, folder);
+    strcat(path, "/");
     
-    DIR* dir = opendir(folder);
+    DIR* dir = opendir(path);
     if (dir)
     {
-        fprintf(stderr, "Scanning folder: %s for files of type: %s\n", folder, extensions);
+        fprintf(stderr, "Scanning folder: %s for files of type: %s\n", path, extensions);
+
+        char *filename = path + strlen(path);
         struct dirent* file;
-        
+
         while ((file = readdir(dir)))
         {
             if (file->d_name[0] == '.')
                 continue;
-            
-            sprintf(buffer1, "%s/%s", folder, file->d_name);
 
-            char *path = realpath(buffer1, buffer2);
-            char *name = strcpy(buffer1, file->d_name);
-            char *ext = strrchr(name, '.');
-            
-            if (ext && strstr(extensions, ext + 1))
+            strcpy(filename, file->d_name);
+            char *ext = strrchr(filename, '.');
+
+            if (file->d_type == DT_DIR)
             {
-                name[strlen(name) - strlen(ext)] = 0;
-                
+                fprintf(stderr, "Recursing into: %s\n", path);
+                scan_folder(path, extensions, tree);
+            }
+            else if (ext && strstr(extensions, ext + 1))
+            {
                 cJSON *item = cJSON_CreateObject();
                 cJSON_AddStringToObject(item, "path", path);
-                cJSON_AddStringToObject(item, "label", name);
+                *ext = 0;
+                cJSON_AddStringToObject(item, "label", filename);
+                *ext = '.';
                 cJSON_AddStringToObject(item, "core_path", "DETECT");
                 cJSON_AddStringToObject(item, "core_name", "DETECT");
                 cJSON_AddStringToObject(item, "db_name", "");
                 cJSON_AddItemToArray(tree, item);
-                count++;
-            }
-            else
-            {
-                struct stat path_stat;
-                stat(path, &path_stat);
-                if (S_ISDIR(path_stat.st_mode))
-                {
-                    fprintf(stderr, "Recursing into: %s\n", path);
-                    count += scan_folder(path, extensions, tree);
-                }
             }
         }
 
         closedir(dir);
     }
-    
-    return count;
 }
 
 int main(int argc, char **argv)
@@ -89,7 +81,6 @@ int main(int argc, char **argv)
     const char *playlist_path = argv[1];
     const char *core_path = argv[2];
     const char *extensions = argv[3];
-    int items_count = 0;
     
     cJSON *playlist = cJSON_CreateObject();
     cJSON_AddStringToObject(playlist, "version", "1.4");
@@ -103,16 +94,17 @@ int main(int argc, char **argv)
 
     for (size_t i = 4; i < argc; i++)
     {
-        items_count += scan_folder(argv[i], extensions, items);
+        scan_folder(argv[i], extensions, items);
     }
-    
+
+    int count = cJSON_GetArraySize(items);
     char *str = cJSON_Print(playlist);
-    
+
     if (strcmp(playlist_path, "-") == 0)
     {
         puts(str);
     }
-    else if (items_count == 0)
+    else if (count == 0)
     {
         unlink(playlist_path);
     }
@@ -121,7 +113,7 @@ int main(int argc, char **argv)
         FILE *fp = fopen(playlist_path, "w");
         if (fp)
         {
-            fprintf(stderr, "Writing playlist of %d items to %s\n", items_count, playlist_path);
+            fprintf(stderr, "Writing playlist of %d items to %s\n", count, playlist_path);
             fputs(str, fp);
             fclose(fp);
         }

@@ -15,7 +15,8 @@ cd /mnt/extsd/retroarch
 # But I haven't found a reliable way to QUICKLY detect changes...
 if [ -x "$(command -v playgen)" ]
 then
-    #mount -o nonempty -t tmpfs tmpfs ./playlists
+    # It might avoid SD Card wear but if we do that then the user can't create custom playlists...
+    # mount -o nonempty -t tmpfs tmpfs ./playlists
     ROMS=/mnt/extsd/roms
     CDROM="cue|mdf|chd|pbp|ccd|gdi|cdi|img|iso"
     playgen "playlists/Nintendo - Nintendo Entertainment System.lpl"        "cores/fceumm_libretro.so"            "nes|fc|zip"          $ROMS/{nes,fc,"Nintendo"}
