@@ -22,9 +22,19 @@ static const char *basename(const char *path)
     return name ? name + 1 : path;
 }
 
+static void brace_ext(char *out, const char *in, size_t max_len)
+{
+    *out++ = '|';
+    for (int i = 3; *in && i < max_len; i++)
+        *out++ = tolower(*in++);
+    *out++ = '|';
+    *out++ = 0;
+}
+
 static void scan_folder(const char *folder, const char *extensions, cJSON *tree)
 {
     char path[PATH_MAX];
+    char ext[16];
      
     if (!realpath(folder, path))
         strcpy(path, folder);
@@ -36,6 +46,7 @@ static void scan_folder(const char *folder, const char *extensions, cJSON *tree)
         fprintf(stderr, "Scanning folder: %s for files of type: %s\n", path, extensions);
 
         char *filename = path + strlen(path);
+        char *ptr = NULL;
         struct dirent* file;
 
         while ((file = readdir(dir)))
@@ -44,24 +55,27 @@ static void scan_folder(const char *folder, const char *extensions, cJSON *tree)
                 continue;
 
             strcpy(filename, file->d_name);
-            char *ext = strrchr(filename, '.');
 
             if (file->d_type == DT_DIR)
             {
                 fprintf(stderr, "Recursing into: %s\n", path);
                 scan_folder(path, extensions, tree);
             }
-            else if (ext && strstr(extensions, ext + 1))
+            else if ((ptr = strrchr(filename, '.')))
             {
-                cJSON *item = cJSON_CreateObject();
-                cJSON_AddStringToObject(item, "path", path);
-                *ext = 0;
-                cJSON_AddStringToObject(item, "label", filename);
-                *ext = '.';
-                cJSON_AddStringToObject(item, "core_path", "DETECT");
-                cJSON_AddStringToObject(item, "core_name", "DETECT");
-                cJSON_AddStringToObject(item, "db_name", "");
-                cJSON_AddItemToArray(tree, item);
+                brace_ext(ext, ptr + 1, 16);
+                if (strstr(extensions, ext))
+                {
+                    cJSON *item = cJSON_CreateObject();
+                    cJSON_AddStringToObject(item, "path", path);
+                    *ptr = 0; // Strip extension from path
+                    cJSON_AddStringToObject(item, "label", filename);
+                    *ptr = '.'; // Add it back in case we need path again
+                    cJSON_AddStringToObject(item, "core_path", "DETECT");
+                    cJSON_AddStringToObject(item, "core_name", "DETECT");
+                    cJSON_AddStringToObject(item, "db_name", "");
+                    cJSON_AddItemToArray(tree, item);
+                }
             }
         }
 
@@ -78,9 +92,11 @@ int main(int argc, char **argv)
         return -1;
     }
     
-    const char *playlist_path = argv[1];
-    const char *core_path = argv[2];
-    const char *extensions = argv[3];
+    char *playlist_path = argv[1];
+    char *core_path = argv[2];
+    char extensions[256];
+
+    brace_ext(extensions, argv[3], 256);
     
     cJSON *playlist = cJSON_CreateObject();
     cJSON_AddStringToObject(playlist, "version", "1.4");
