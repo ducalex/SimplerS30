@@ -14,7 +14,6 @@ Copy the content of the sdcard folder to the root of your FAT32 SD Card.
 
 - Periodically keep up with new emulator versions
 - Port some non-libretro games (add a way to start PPSSPP for example)
-- Dump the internal flash and find out if modifications are possible
 
 
 # Technical information

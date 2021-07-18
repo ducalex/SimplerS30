@@ -1,0 +1,7 @@
+rootfs on / type rootfs (rw)
+tmpfs on /dev type tmpfs (rw,nosuid,relatime,mode=755)
+tmpfs on /tmp type tmpfs (rw,nosuid,relatime,mode=755)
+devpts on /dev/pts type devpts (rw,relatime,mode=600)
+proc on /proc type proc (rw,relatime)
+sysfs on /sys type sysfs (rw,relatime)
+/dev/block/vold/179:1 on /mnt/extsd type vfat (rw,dirsync,nosuid,nodev,relatime,uid=1000,gid=1023,fmask=0702,dmask=0702,allow_utime=0020,codepage=cp437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro)
